@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "seededAt": "2026-09-24T12:00:00.000Z",
+  "projects": [
+    "prj_supportdesk",
+    "prj_fintech_api",
+    "prj_healthtrack"
+  ]
+}
