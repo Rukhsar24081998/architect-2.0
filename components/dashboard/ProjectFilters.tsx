@@ -35,9 +35,9 @@ export function ProjectFilters({
   ];
 
   return (
-    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 select-none">
+    <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3 select-none">
       {/* Search Input */}
-      <div className="relative flex-1 max-w-md">
+      <div className="relative flex-1 min-w-[200px] xl:max-w-xs 2xl:max-w-sm">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[#8B949E] pointer-events-none" />
         <input
           type="text"
@@ -59,7 +59,7 @@ export function ProjectFilters({
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+      <div className="flex items-center gap-1.5 shrink-0 overflow-x-auto scrollbar-none">
         {categories.map((cat) => {
           const count = getFilterCount(cat.id);
           const isActive = activeFilter === cat.id;
@@ -69,15 +69,15 @@ export function ProjectFilters({
               key={cat.id}
               type="button"
               onClick={() => onFilterChange(cat.id)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium transition-all duration-150 cursor-pointer shrink-0 ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-[6px] text-xs font-medium transition-all duration-150 cursor-pointer shrink-0 whitespace-nowrap ${
                 isActive
                   ? "bg-[#161B22] text-[#F0F6FC] border border-[#30363D] shadow-sm font-semibold"
                   : "text-[#8B949E] hover:text-[#C9D1D9] hover:bg-[#161B22]/50 border border-transparent"
               }`}
             >
-              <span>{cat.label}</span>
+              <span className="whitespace-nowrap">{cat.label}</span>
               <span
-                className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full shrink-0 whitespace-nowrap ${
                   isActive
                     ? "bg-[#21262D] text-[#00F2FE]"
                     : "bg-[#161B22] text-[#6E7681]"

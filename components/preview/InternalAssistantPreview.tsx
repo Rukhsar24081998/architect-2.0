@@ -301,27 +301,27 @@ export function InternalAssistantPreview({
               "hover:border-[#00F2FE]/70 hover:bg-[#00F2FE]/5 cursor-pointer ring-1 ring-[#00F2FE]/30"
           )}
         >
-          <div className="flex items-center gap-2.5">
-            <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight flex items-center gap-2">
-              <span>{productName}</span>
-              <span className="text-[10px] font-mono text-[#3FB950] bg-[#3FB950]/10 border border-[#3FB950]/20 px-1.5 py-0.2 rounded hidden sm:inline-flex items-center gap-1">
+          <div className="flex items-center gap-2.5 min-w-0 shrink-0">
+            <h2 className="text-xs sm:text-sm font-bold text-white tracking-tight flex items-center gap-2 whitespace-nowrap">
+              <span className="whitespace-nowrap">{productName}</span>
+              <span className="text-[10px] font-mono text-[#3FB950] bg-[#3FB950]/10 border border-[#3FB950]/20 px-1.5 py-0.5 rounded inline-flex items-center gap-1 shrink-0 whitespace-nowrap">
                 <span className="h-1.5 w-1.5 rounded-full bg-[#3FB950]" />
                 Online
               </span>
             </h2>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 text-xs">
-            <div className="hidden md:flex items-center gap-2 font-mono text-[11px] text-[#8B949E]">
+          <div className="flex items-center gap-2 sm:gap-3 text-xs shrink-0">
+            <div className="hidden xl:flex items-center gap-2 font-mono text-[11px] text-[#8B949E] whitespace-nowrap shrink-0">
               <span className="text-[#C9D1D9]">Model:</span>
               <span className="text-[#00F2FE]">Claude 3.5 Sonnet</span>
               <span className="text-[#6E7681]">·</span>
               <span className="text-[#3FB950]">28ms latency</span>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#00F2FE] bg-[#00F2FE]/10 px-2 py-1 rounded-lg border border-[#00F2FE]/30">
-              <Sparkles className="h-3 w-3" />
-              <span>Built by Architect</span>
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono text-[#00F2FE] bg-[#00F2FE]/10 px-2 py-1 rounded-lg border border-[#00F2FE]/30 whitespace-nowrap shrink-0">
+              <Sparkles className="h-3 w-3 shrink-0" />
+              <span className="whitespace-nowrap">Built by Architect</span>
             </span>
           </div>
         </header>

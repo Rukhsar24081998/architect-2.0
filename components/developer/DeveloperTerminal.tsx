@@ -139,26 +139,26 @@ export function DeveloperTerminal({
         {/* Quick Commands + Panel Controls */}
         <div className="flex items-center gap-2">
           {!isCollapsed && activeTab === "terminal" && (
-            <div className="hidden md:flex items-center gap-1.5">
+            <div className="hidden md:flex items-center gap-1.5 shrink-0 whitespace-nowrap">
               <span className="text-[10px] text-[#6E7681]">Quick:</span>
               <button
                 type="button"
                 onClick={() => handleRunCommand("npm run build")}
-                className="px-2 py-0.5 rounded bg-[#21262D] hover:bg-[#30363D] text-[11px] text-[#C9D1D9] hover:text-white transition-colors"
+                className="px-2 py-0.5 rounded bg-[#21262D] hover:bg-[#30363D] text-[11px] text-[#C9D1D9] hover:text-white transition-colors whitespace-nowrap shrink-0"
               >
                 build
               </button>
               <button
                 type="button"
                 onClick={() => handleRunCommand("npm run lint")}
-                className="px-2 py-0.5 rounded bg-[#21262D] hover:bg-[#30363D] text-[11px] text-[#C9D1D9] hover:text-white transition-colors"
+                className="px-2 py-0.5 rounded bg-[#21262D] hover:bg-[#30363D] text-[11px] text-[#C9D1D9] hover:text-white transition-colors whitespace-nowrap shrink-0"
               >
                 lint
               </button>
               <button
                 type="button"
                 onClick={() => handleRunCommand("git status")}
-                className="px-2 py-0.5 rounded bg-[#21262D] hover:bg-[#30363D] text-[11px] text-[#C9D1D9] hover:text-white transition-colors"
+                className="px-2 py-0.5 rounded bg-[#21262D] hover:bg-[#30363D] text-[11px] text-[#C9D1D9] hover:text-white transition-colors whitespace-nowrap shrink-0"
               >
                 git status
               </button>

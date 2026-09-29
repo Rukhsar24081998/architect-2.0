@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { ProjectDetails, BuildPlan } from "@/lib/types";
 import { AgentRun } from "@/lib/agents/types";
 import {
@@ -63,7 +63,24 @@ export function DeveloperWorkspace({
   const [activeSideTab, setActiveSideTab] =
     useState<DeveloperSideTab>("files");
   const [isSidePanelOpen, setIsSidePanelOpen] = useState(true);
-  const [isContextPanelOpen, setIsContextPanelOpen] = useState(true);
+  const [isContextPanelOpen, setIsContextPanelOpen] = useState(false);
+
+  // Automatically collapse Architect Context on narrower screens (< 1280px)
+  // while keeping it open in 3-column layout on wide desktop (>= 1280px)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mql = window.matchMedia("(min-width: 1280px)");
+    const updatePanelState = (matches: boolean) => {
+      setIsContextPanelOpen(matches);
+    };
+    updatePanelState(mql.matches);
+
+    const handler = (e: MediaQueryListEvent) => {
+      updatePanelState(e.matches);
+    };
+    mql.addEventListener("change", handler);
+    return () => mql.removeEventListener("change", handler);
+  }, []);
 
   // Active file & open editor tabs
   const [activeFileId, setActiveFileId] = useState<string | null>(
@@ -430,7 +447,7 @@ export function DeveloperWorkspace({
         )}
 
         {/* CENTER COLUMN: Tabs + Editor/Diff + Bottom Terminal */}
-        <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden bg-[#090A0F]">
+        <div className="flex-1 flex flex-col min-w-0 md:min-w-[400px] h-full overflow-hidden bg-[#090A0F]">
           {/* Editor Tabs Strip */}
           <div className="flex items-center justify-between bg-[#0E1117] border-b border-[#21262D]">
             <div className="flex-1 overflow-hidden">
@@ -445,22 +462,29 @@ export function DeveloperWorkspace({
             </div>
 
             {/* Panel toggle shortcuts */}
-            <div className="flex items-center gap-1 px-2 shrink-0">
+            <div className="flex items-center gap-1.5 px-2 shrink-0">
               <button
                 type="button"
                 onClick={() => setIsContextPanelOpen((prev) => !prev)}
-                className="p-1 rounded text-[#6E7681] hover:text-white hover:bg-[#21262D] transition-colors hidden xl:inline-block"
+                className={cn(
+                  "flex items-center gap-1 px-2 py-1 rounded text-xs font-mono transition-colors",
+                  isContextPanelOpen
+                    ? "text-[#00F2FE] bg-[#00F2FE]/10 border border-[#00F2FE]/30"
+                    : "text-[#8B949E] hover:text-white hover:bg-[#21262D] border border-transparent"
+                )}
                 title={
                   isContextPanelOpen
-                    ? "Hide Context Panel"
-                    : "Show Context Panel"
+                    ? "Hide Architect Context"
+                    : "Show Architect Context"
                 }
+                aria-label="Toggle Architect Context Panel"
               >
                 {isContextPanelOpen ? (
                   <PanelRightClose className="h-3.5 w-3.5" />
                 ) : (
                   <PanelRightOpen className="h-3.5 w-3.5" />
                 )}
+                <span className="hidden sm:inline text-[11px]">Context</span>
               </button>
             </div>
           </div>
@@ -500,13 +524,43 @@ export function DeveloperWorkspace({
 
         {/* 3. RIGHT CONTEXT PANEL */}
         {isContextPanelOpen && (
-          <div className="w-64 sm:w-72 h-full shrink-0 hidden lg:block z-10">
-            <DeveloperContextPanel
-              activeFile={activeFile}
-              project={project}
-              currentPlan={currentPlan}
+          <>
+            {/* Mobile/Tablet Backdrop when opened as overlay (< xl) */}
+            <div
+              className="fixed inset-0 bg-black/50 backdrop-blur-xs z-30 xl:hidden"
+              onClick={() => setIsContextPanelOpen(false)}
             />
-          </div>
+            <div
+              className={cn(
+                "h-full shrink-0 z-30 transition-all",
+                // Overlay drawer mode on narrower screens (< 1280px)
+                "fixed right-0 top-0 bottom-0 w-80 max-w-[85vw] shadow-2xl bg-[#0E1117] border-l border-[#21262D] flex flex-col",
+                // In-flow 3rd column on desktop (>= 1280px)
+                "xl:relative xl:inset-auto xl:w-64 xl:sm:w-72 xl:shadow-none xl:z-10 xl:block xl:border-l-0"
+              )}
+            >
+              {/* Drawer header on < xl */}
+              <div className="flex items-center justify-between px-3 py-2 border-b border-[#21262D] bg-[#161B22] xl:hidden shrink-0">
+                <span className="text-xs font-semibold text-white">Architect Context</span>
+                <button
+                  type="button"
+                  onClick={() => setIsContextPanelOpen(false)}
+                  className="p-1 rounded text-[#8B949E] hover:text-white hover:bg-[#21262D]"
+                  aria-label="Close Context Drawer"
+                >
+                  <PanelRightClose className="h-4 w-4" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto">
+                <DeveloperContextPanel
+                  activeFile={activeFile}
+                  project={project}
+                  currentPlan={currentPlan}
+                />
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

@@ -34,14 +34,106 @@ export function detectPreviewScenario({
   initialRuns?: AgentRun[];
   selectedPlanId?: string;
 }): ScenarioSelectionResult {
-  // 1. Locate the target Build Plan
-  let activePlan: BuildPlan | undefined;
+  // Helper for matching tokens against scenario rules
+  const matchScenario = (
+    tokens: string,
+    planTitle?: string,
+    cleanPlanName?: string
+  ): ScenarioSelectionResult => {
+    // A. Internal Assistant / AI Chatbot
+    if (
+      /\b(assistant|chatbot|chat\s*bot|copilot|conversational|ai\s*agent|chat\s*interface|bot|internal\s*assistant)\b/i.test(
+        tokens
+      )
+    ) {
+      return {
+        scenario: "assistant",
+        matchedReason: `Matched assistant/chatbot intent: "${planTitle || project.name}"`,
+        activePlanTitle: planTitle,
+        productName: cleanPlanName || "Internal Assistant",
+      };
+    }
+
+    // C. Dashboard / Analytics
+    if (
+      /\b(dashboard|analytics|kpi|metrics|telemetry|chart|reporting|monitor|control\s*center)\b/i.test(
+        tokens
+      )
+    ) {
+      return {
+        scenario: "dashboard",
+        matchedReason: `Matched dashboard/metrics intent: "${planTitle || project.name}"`,
+        activePlanTitle: planTitle,
+        productName: cleanPlanName || `${project.name} Dashboard`,
+      };
+    }
+
+    // D. Generic SaaS / Landing Page
+    if (
+      /\b(landing|landing\s*page|marketing|showcase|waitlist|homepage|hero\s*page)\b/i.test(
+        tokens
+      )
+    ) {
+      return {
+        scenario: "landing",
+        matchedReason: `Matched landing page intent: "${planTitle || project.name}"`,
+        activePlanTitle: planTitle,
+        productName: cleanPlanName || `${project.name} SaaS`,
+      };
+    }
+
+    // B. Customer Support / SupportDesk
+    if (
+      /\b(support|supportdesk|ticket|inbox|helpdesk|service\s*desk|customer\s*service)\b/i.test(
+        tokens
+      ) ||
+      project.id === "prj_supportdesk" ||
+      project.template === "nextjs-saas"
+    ) {
+      return {
+        scenario: "supportdesk",
+        matchedReason: `Matched customer support intent: "${planTitle || project.name}"`,
+        activePlanTitle: planTitle,
+        productName: "SupportDesk AI",
+      };
+    }
+
+    // Fallback (Requirement 10: Default to SupportDesk)
+    return {
+      scenario: "supportdesk",
+      matchedReason: "Default fallback to SupportDesk AI",
+      activePlanTitle: planTitle,
+      productName: "SupportDesk AI",
+    };
+  };
+
+  // 1. Explicit planId: isolate classification to ONLY this build plan
   if (selectedPlanId) {
-    activePlan = initialPlans.find((p) => p.id === selectedPlanId);
+    const explicitPlan = initialPlans.find((p) => p.id === selectedPlanId);
+    if (explicitPlan) {
+      const planTitle = explicitPlan.title;
+      const cleanPlanName = planTitle
+        ? planTitle.replace(/\b(build\s*plan|plan|architecture)\b/gi, "").trim()
+        : undefined;
+
+      const tokens = [
+        explicitPlan.title,
+        explicitPlan.summary,
+        ...(explicitPlan.steps
+          ? explicitPlan.steps.map((s) => `${s.title} ${s.description}`)
+          : []),
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return matchScenario(tokens, planTitle, cleanPlanName);
+    }
   }
 
-  // Fallback to latest run plan
-  if (!activePlan && initialRuns.length > 0) {
+  // 2. Fallback to latest run plan
+  let activePlan: BuildPlan | undefined;
+  if (initialRuns.length > 0) {
     const recentRun = initialRuns.find((r) => r.status === "completed") || initialRuns[0];
     if (recentRun?.buildPlanId) {
       activePlan = initialPlans.find((p) => p.id === recentRun.buildPlanId);
@@ -62,14 +154,18 @@ export function detectPreviewScenario({
       ) || initialPlans[0];
   }
 
-  // 2. Extract recent user prompt intent
+  // 3. Extract recent user prompt intent
   const userMessages = Array.isArray(project.messages)
     ? project.messages.filter((m) => m.sender === "user" || m.role === "user")
     : [];
   const latestUserMessage = userMessages[userMessages.length - 1];
 
-  // 3. Assemble tokens to match against
+  // 4. Assemble tokens to match against (general flow when no explicit planId given)
   const planTitle = activePlan?.title || initialRuns[0]?.buildPlanTitle;
+  const cleanPlanName = planTitle
+    ? planTitle.replace(/\b(build\s*plan|plan|architecture)\b/gi, "").trim()
+    : undefined;
+
   const tokens = [
     planTitle,
     activePlan?.summary,
@@ -82,76 +178,5 @@ export function detectPreviewScenario({
     .join(" ")
     .toLowerCase();
 
-  // Clean formatted name from plan
-  const cleanPlanName = planTitle
-    ? planTitle.replace(/\b(build\s*plan|plan|architecture)\b/gi, "").trim()
-    : undefined;
-
-  // 4. Scenario Matching Rules
-
-  // A. Internal Assistant / AI Chatbot
-  if (
-    /\b(assistant|chatbot|chat\s*bot|copilot|conversational|ai\s*agent|chat\s*interface|bot|internal\s*assistant)\b/i.test(
-      tokens
-    )
-  ) {
-    return {
-      scenario: "assistant",
-      matchedReason: `Matched assistant/chatbot intent: "${planTitle || latestUserMessage?.content || project.name}"`,
-      activePlanTitle: planTitle,
-      productName: cleanPlanName || "Internal Assistant",
-    };
-  }
-
-  // C. Dashboard / Analytics
-  if (
-    /\b(dashboard|analytics|kpi|metrics|telemetry|chart|reporting|monitor|control\s*center)\b/i.test(
-      tokens
-    )
-  ) {
-    return {
-      scenario: "dashboard",
-      matchedReason: `Matched dashboard/metrics intent: "${planTitle || latestUserMessage?.content || project.name}"`,
-      activePlanTitle: planTitle,
-      productName: cleanPlanName || `${project.name} Dashboard`,
-    };
-  }
-
-  // D. Generic SaaS / Landing Page
-  if (
-    /\b(landing|landing\s*page|marketing|showcase|waitlist|homepage|hero\s*page)\b/i.test(
-      tokens
-    )
-  ) {
-    return {
-      scenario: "landing",
-      matchedReason: `Matched landing page intent: "${planTitle || latestUserMessage?.content || project.name}"`,
-      activePlanTitle: planTitle,
-      productName: cleanPlanName || `${project.name} SaaS`,
-    };
-  }
-
-  // B. Customer Support / SupportDesk
-  if (
-    /\b(support|supportdesk|ticket|inbox|helpdesk|service\s*desk|customer\s*service)\b/i.test(
-      tokens
-    ) ||
-    project.id === "prj_supportdesk" ||
-    project.template === "nextjs-saas"
-  ) {
-    return {
-      scenario: "supportdesk",
-      matchedReason: `Matched customer support intent: "${planTitle || project.name}"`,
-      activePlanTitle: planTitle,
-      productName: "SupportDesk AI",
-    };
-  }
-
-  // Fallback (Requirement 10: Default to SupportDesk)
-  return {
-    scenario: "supportdesk",
-    matchedReason: "Default fallback to SupportDesk AI",
-    activePlanTitle: planTitle,
-    productName: "SupportDesk AI",
-  };
+  return matchScenario(tokens, planTitle, cleanPlanName);
 }

@@ -124,27 +124,27 @@ export function CodeEditor({
       </div>
 
       {/* Editor Status Bar */}
-      <div className="h-6 border-t border-[#21262D] bg-[#0E1117] px-3 flex items-center justify-between text-[10px] font-mono text-[#8B949E] select-none shrink-0">
-        <div className="flex items-center gap-3">
-          <span>
+      <div className="h-6 border-t border-[#21262D] bg-[#0E1117] px-3 flex items-center justify-between text-[10px] font-mono text-[#8B949E] select-none shrink-0 overflow-hidden">
+        <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
+          <span className="whitespace-nowrap">
             Ln {cursorPos.line}, Col {cursorPos.col}
           </span>
           <span className="text-[#30363D]">|</span>
-          <span>{lineCount} lines</span>
+          <span className="whitespace-nowrap">{lineCount} lines</span>
           {activeFile.isModified && (
             <>
               <span className="text-[#30363D]">|</span>
-              <span className="text-[#F59E0B] font-semibold">● Modified</span>
+              <span className="text-[#F59E0B] font-semibold whitespace-nowrap">● Modified</span>
             </>
           )}
         </div>
 
-        <div className="flex items-center gap-3">
-          <span>Spaces: 2</span>
-          <span className="text-[#30363D]">|</span>
-          <span>UTF-8</span>
-          <span className="text-[#30363D]">|</span>
-          <span className="text-[#00F2FE] capitalize">{activeFile.language}</span>
+        <div className="flex items-center gap-3 shrink-0 whitespace-nowrap">
+          <span className="hidden sm:inline whitespace-nowrap">Spaces: 2</span>
+          <span className="text-[#30363D] hidden sm:inline">|</span>
+          <span className="hidden md:inline whitespace-nowrap">UTF-8</span>
+          <span className="text-[#30363D] hidden md:inline">|</span>
+          <span className="text-[#00F2FE] capitalize whitespace-nowrap">{activeFile.language}</span>
         </div>
       </div>
     </div>

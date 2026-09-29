@@ -56,9 +56,9 @@ export function DeveloperHeader({
       </div>
 
       {/* Center: Branch + Git Status + Save Status */}
-      <div className="hidden md:flex items-center gap-3 text-xs font-mono">
+      <div className="hidden md:flex items-center gap-2 lg:gap-3 text-xs font-mono shrink-0 whitespace-nowrap">
         {/* Branch */}
-        <div className="flex items-center gap-1.5 text-[#8B949E] px-2 py-0.5 rounded bg-[#161B22] border border-[#21262D]">
+        <div className="flex items-center gap-1.5 text-[#8B949E] px-2 py-0.5 rounded bg-[#161B22] border border-[#21262D] shrink-0">
           <GitBranch className="h-3 w-3 text-[#A855F7]" />
           <span className="text-white">{currentBranch}</span>
         </div>
@@ -67,15 +67,15 @@ export function DeveloperHeader({
         <div
           onClick={onOpenGitPanel}
           className={cn(
-            "flex items-center gap-1.5 px-2 py-0.5 rounded cursor-pointer transition-colors border",
+            "flex items-center gap-1.5 px-2 py-0.5 rounded cursor-pointer transition-colors border shrink-0 whitespace-nowrap",
             modifiedCount > 0
               ? "bg-[#F59E0B]/10 text-[#F59E0B] border-[#F59E0B]/30 hover:bg-[#F59E0B]/20"
               : "bg-[#161B22] text-[#8B949E] border-[#21262D]"
           )}
           title="Click to view Source Control"
         >
-          <span className={cn("h-1.5 w-1.5 rounded-full", modifiedCount > 0 ? "bg-[#F59E0B] animate-pulse" : "bg-[#3FB950]")} />
-          <span>
+          <span className={cn("h-1.5 w-1.5 rounded-full shrink-0", modifiedCount > 0 ? "bg-[#F59E0B] animate-pulse" : "bg-[#3FB950]")} />
+          <span className="whitespace-nowrap">
             {modifiedCount > 0 ? `${modifiedCount} changed files` : "working tree clean"}
           </span>
         </div>
@@ -86,7 +86,7 @@ export function DeveloperHeader({
           onClick={onSave}
           disabled={!hasUnsavedChanges}
           className={cn(
-            "flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium transition-all duration-150 border",
+            "flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium transition-all duration-150 border shrink-0 whitespace-nowrap",
             hasUnsavedChanges
               ? "bg-[#00F2FE]/15 text-[#00F2FE] border-[#00F2FE]/40 hover:bg-[#00F2FE]/25 cursor-pointer shadow-[0_0_10px_rgba(0,242,254,0.15)]"
               : "bg-[#161B22] text-[#8B949E] border-[#21262D] cursor-default opacity-80"
@@ -95,13 +95,13 @@ export function DeveloperHeader({
         >
           {hasUnsavedChanges ? (
             <>
-              <AlertCircle className="h-3 w-3 text-[#00F2FE]" />
-              <span>Unsaved changes (Save)</span>
+              <AlertCircle className="h-3 w-3 text-[#00F2FE] shrink-0" />
+              <span className="whitespace-nowrap">Unsaved changes (Save)</span>
             </>
           ) : (
             <>
-              <CheckCircle2 className="h-3 w-3 text-[#3FB950]" />
-              <span className="text-[#8B949E]">Saved</span>
+              <CheckCircle2 className="h-3 w-3 text-[#3FB950] shrink-0" />
+              <span className="text-[#8B949E] whitespace-nowrap">Saved</span>
             </>
           )}
         </button>

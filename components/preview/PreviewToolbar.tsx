@@ -137,11 +137,11 @@ export function PreviewToolbar({
         </button>
 
         {/* Build / Agent Connection Status */}
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#30363D] text-[11px] font-mono text-[#8B949E]">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#00F2FE]" />
-          <span className="text-[#C9D1D9]">Built by Architect</span>
-          <span className="text-[#6E7681]">·</span>
-          <span>Last build: just now</span>
+        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#161B22] border border-[#30363D] text-[11px] font-mono text-[#8B949E] whitespace-nowrap shrink-0">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#00F2FE] shrink-0" />
+          <span className="text-[#C9D1D9] whitespace-nowrap">Built by Architect</span>
+          <span className="text-[#6E7681] hidden xl:inline">·</span>
+          <span className="hidden xl:inline whitespace-nowrap">Last build: just now</span>
         </div>
       </div>
     </header>

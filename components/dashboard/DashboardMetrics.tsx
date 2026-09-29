@@ -59,11 +59,11 @@ export function DashboardMetrics({ projects }: DashboardMetricsProps) {
         return (
           <div
             key={m.label}
-            className={`p-3.5 rounded-[8px] bg-[#0E1117] border ${m.borderColor} flex items-center justify-between transition-colors shadow-sm`}
+            className={`p-3.5 rounded-[8px] bg-[#0E1117] border ${m.borderColor} flex items-center justify-between transition-colors shadow-sm min-h-[76px]`}
           >
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5">
-                <span className="relative flex h-2 w-2">
+            <div className="space-y-0.5 min-w-0 pr-2">
+              <div className="flex items-center gap-1.5 min-w-0">
+                <span className="relative flex h-2 w-2 shrink-0">
                   {m.pulse && (
                     <span
                       className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${m.dotColor}`}
@@ -73,7 +73,7 @@ export function DashboardMetrics({ projects }: DashboardMetricsProps) {
                     className={`relative inline-flex rounded-full h-2 w-2 ${m.dotColor}`}
                   />
                 </span>
-                <span className="text-[11px] font-mono uppercase text-[#8B949E]">
+                <span className="text-[10px] xl:text-[11px] font-mono uppercase text-[#8B949E] whitespace-nowrap truncate tracking-tight">
                   {m.label}
                 </span>
               </div>
@@ -82,7 +82,7 @@ export function DashboardMetrics({ projects }: DashboardMetricsProps) {
               </p>
             </div>
 
-            <div className="h-8 w-8 rounded-[6px] bg-[#161B22] border border-[#21262D] flex items-center justify-center text-[#8B949E]">
+            <div className="h-8 w-8 rounded-[6px] bg-[#161B22] border border-[#21262D] flex items-center justify-center text-[#8B949E] shrink-0">
               <Icon className="h-4 w-4" />
             </div>
           </div>
