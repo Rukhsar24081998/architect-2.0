@@ -1,14 +1,19 @@
+import React from "react";
+import { notFound } from "next/navigation";
+import { storage } from "@/lib/storage";
+import { SettingsStudio } from "@/components/studios/SettingsStudio";
+
 interface PageProps {
   params: Promise<{ id: string }> | { id: string };
 }
 
 export default async function ProjectSettingsPage({ params }: PageProps) {
   const { id } = await Promise.resolve(params);
+  const project = await storage.getProjectById(id);
 
-  return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-xl font-bold text-white">Project Settings: {id}</h1>
-      <p className="text-sm text-slate-400">General settings and danger zone placeholder.</p>
-    </div>
-  );
+  if (!project) {
+    notFound();
+  }
+
+  return <SettingsStudio project={project} />;
 }

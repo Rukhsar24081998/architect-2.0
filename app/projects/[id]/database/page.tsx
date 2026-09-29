@@ -1,14 +1,19 @@
+import React from "react";
+import { notFound } from "next/navigation";
+import { storage } from "@/lib/storage";
+import { DatabaseStudio } from "@/components/studios/DatabaseStudio";
+
 interface PageProps {
   params: Promise<{ id: string }> | { id: string };
 }
 
 export default async function ProjectDatabasePage({ params }: PageProps) {
   const { id } = await Promise.resolve(params);
+  const project = await storage.getProjectById(id);
 
-  return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-xl font-bold text-white">Database & Schema Studio: {id}</h1>
-      <p className="text-sm text-slate-400">Visual table ERD and record browser placeholder.</p>
-    </div>
-  );
+  if (!project) {
+    notFound();
+  }
+
+  return <DatabaseStudio project={project} />;
 }

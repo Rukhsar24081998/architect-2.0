@@ -1,14 +1,19 @@
+import React from "react";
+import { notFound } from "next/navigation";
+import { storage } from "@/lib/storage";
+import { GitHubStudio } from "@/components/studios/GitHubStudio";
+
 interface PageProps {
   params: Promise<{ id: string }> | { id: string };
 }
 
 export default async function ProjectGitHubPage({ params }: PageProps) {
   const { id } = await Promise.resolve(params);
+  const project = await storage.getProjectById(id);
 
-  return (
-    <div className="min-h-screen p-8">
-      <h1 className="text-xl font-bold text-white">GitHub Integration & PRs: {id}</h1>
-      <p className="text-sm text-slate-400">Branches, commits, and pull requests placeholder.</p>
-    </div>
-  );
+  if (!project) {
+    notFound();
+  }
+
+  return <GitHubStudio project={project} />;
 }
