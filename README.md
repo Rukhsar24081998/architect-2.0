@@ -1,10 +1,20 @@
 # Architect 2.0
 
+> **Live Demo:** [architect-20-psi.vercel.app](https://architect-20-psi.vercel.app)  
+> **Repository:** [github.com/Rukhsar24081998/architect-2.0](https://github.com/Rukhsar24081998/architect-2.0)
+
 > **Architect 2.0 is an AI-native software development workspace that turns natural-language product ideas into structured build plans, coordinated agent execution, interactive previews, and developer-ready project workspaces.**
 
 Architect 2.0 is built on a single organizing principle: **"Simple by default. Powerful when needed."** 
 
 Traditional development workflows force teams to pick between oversimplified no-code prompt generators and fragmented, intimidating command-line environments. Architect 2.0 unifies both worlds into a single progressive workspace: **Build Mode** offers founders, product managers, designers, and operators a prompt-first, intent-driven experience, while **Developer Mode** exposes full IDE control, code editing, terminal commands, and version diffs without losing project context.
+
+---
+
+## Links
+
+- **Live Demo:** https://architect-20-psi.vercel.app
+- **GitHub Repository:** https://github.com/Rukhsar24081998/architect-2.0
 
 ---
 
@@ -236,6 +246,8 @@ npm run build
 ---
 
 ## Assessment Demo Guide
+
+**Live application:** https://architect-20-psi.vercel.app
 
 To experience the primary end-to-end golden path:
 
